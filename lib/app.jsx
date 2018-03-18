@@ -1,4 +1,5 @@
 var eventEmitter = new EventEmitter();
+
 var Browser = React.createClass({
     componentWillMount: function () {
         eventEmitter.addListener("reload", this.reloadData);
@@ -48,93 +49,31 @@ var RetVisitors = React.createClass({
 var Visitors = React.createClass({
     getInitialState: function () {
         return {
-           data : [
-               { day: '02-01-2016', count: 18 },
-               { day: '02-02-2016', count: 12 },
-               { day: '02-03-2016', count: 15 },
-               { day: '02-04-2016', count: 14 },
-               { day: '02-05-2016', count: 14 },
-               { day: '02-06-2016', count: 16 },
-               { day: '02-07-2016', count: 18 },
-               { day: '02-08-2016', count: 19 },
-               { day: '02-09-2016', count: 20 },
-               { day: '02-10-2016', count: 21 },
-               { day: '02-11-2016', count: 22 },
-               { day: '02-12-2016', count: 23 },
-               { day: '02-13-2016', count: 21 },
-               { day: '02-14-2016', count: 22 },
-               { day: '02-15-2016', count: 14 },
-               { day: '02-16-2016', count: 18 },
-               { day: '02-17-2016', count: 10 },
-               { day: '02-18-2016', count: 15 },
-               { day: '02-19-2016', count: 18 },
-               { day: '02-20-2016', count: 22 },
-               { day: '02-21-2016', count: 12 },
-               { day: '02-22-2016', count: 10 },
-               { day: '02-23-2016', count: 14 },
-               { day: '02-24-2016', count: 13 },
-               { day: '02-25-2016', count: 23 },
-               { day: '02-26-2016', count: 11 },
-               { day: '02-27-2016', count: 22 },
-               { day: '02-28-2016', count: 12 },
-               { day: '02-29-2016', count: 15 }
-           ]
+           data:this.props.initialData
         };
     },
     componentWillMount: function () {
-        eventEmitter.addListener("reload", this.reloadData);
+        eventEmitter.addListener("EVENT_START_DATE_CHANGE", this.reloadData);
+        eventEmitter.addListener("EVENT_END_DATE_CHANGE", this.reloadData);
     },
     componentWillUnmount: function () {
-        eventEmitter.removeListener("reload", this.reloadData);
+        eventEmitter.removeListener("EVENT_START_DATE_CHANGE", this.reloadData);
+        eventEmitter.removeListener("EVENT_END_DATE_CHANGE", this.reloadData);
     },
-    reloadData: function (defaultValue) {
-        console.info("Reload data called on Visitors card");
-        this.setState({data:[
-            { day: '02-01-2016', count: 18 },
-            { day: '02-02-2016', count: 12 },
-            { day: '02-03-2016', count: 15 },
-            { day: '02-04-2016', count: 14 },
-            { day: '02-05-2016', count: 14 },
-            { day: '02-06-2016', count: 16 },
-            { day: '02-07-2016', count: 18 },
-            { day: '02-08-2016', count: 19 },
-            { day: '02-09-2016', count: 20 },
-            { day: '02-10-2016', count: 21 },
-            { day: '02-11-2016', count: 22 }
-        ]})
+    reloadData: function (range,value) {
+    
+        if(range === 'start'){
+            this.setState({
+                data: this.state.data.filter(elem => new Date(value) <= new Date(elem.day))
+            })
+        }
+        else if(range === 'end'){
+            this.setState({
+                data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
+            })
+        }
     },
     render:function(){
-        var data = [
-            { day: '02-01-2016', count: 18 },
-            { day: '02-02-2016', count: 12 },
-            { day: '02-03-2016', count: 15 },
-            { day: '02-04-2016', count: 14 },
-            { day: '02-05-2016', count: 14 },
-            { day: '02-06-2016', count: 16 },
-            { day: '02-07-2016', count: 18 },
-            { day: '02-08-2016', count: 19 },
-            { day: '02-09-2016', count: 20 },
-            { day: '02-10-2016', count: 21 },
-            { day: '02-11-2016', count: 22 },
-            { day: '02-12-2016', count: 23 },
-            { day: '02-13-2016', count: 21 },
-            { day: '02-14-2016', count: 22 },
-            { day: '02-15-2016', count: 14 },
-            { day: '02-16-2016', count: 18 },
-            { day: '02-17-2016', count: 10 },
-            { day: '02-18-2016', count: 15 },
-            { day: '02-19-2016', count: 18 },
-            { day: '02-20-2016', count: 22 },
-            { day: '02-21-2016', count: 12 },
-            { day: '02-22-2016', count: 10 },
-            { day: '02-23-2016', count: 14 },
-            { day: '02-24-2016', count: 13 },
-            { day: '02-25-2016', count: 23 },
-            { day: '02-26-2016', count: 11 },
-            { day: '02-27-2016', count: 22 },
-            { day: '02-28-2016', count: 12 },
-            { day: '02-29-2016', count: 15 }
-        ];
         return (
             <div>
                 <h3>Visitors to your site</h3>
@@ -146,8 +85,8 @@ var Visitors = React.createClass({
     }
 });
 
-
 var Filter = React.createClass({
+   
     getDefaultProps: function () {
         return {
 
@@ -157,13 +96,22 @@ var Filter = React.createClass({
         return {
             location: '',
             file_type: [],
-            startDate: '',
-            endDate: '',
+            startDate: this.props.startDate,
+            endDate: this.props.endDate,
         };
     },
     mixins: [resizeMixin],
-    handleLocationChange: function() {
-        eventEmitter.emitEvent("reload");
+    handleStartDateChange: function (e) {
+        this.setState({
+           startDate: e.target.value
+        })
+        eventEmitter.emitEvent("EVENT_START_DATE_CHANGE",['start',e.target.value]);
+    },
+    handleEndDateChange: function (e) {
+        this.setState({
+            endDate: e.target.value
+        })
+        eventEmitter.emitEvent("EVENT_END_DATE_CHANGE",['end',e.target.value]);
     },
     render: function () {
         return (
@@ -180,62 +128,88 @@ var Filter = React.createClass({
                     <input onChange={this.handleLocationChange} type="radio" name="location" value="New York" /><h5>New York</h5>
                     <br/>
                     <h4>Date range</h4>
-                    <input name="startDate" type="date" value=""/> <h5>to</h5>
-                    <input name="endDate" type="date" value="" /> 
+                    <input onChange={this.handleStartDateChange} id="startDate" name="startDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.startDate}/> <h5>to</h5>
+                    <input onChange={this.handleEndDateChange} id="endDate" name="endDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.endDate} /> 
                 </form>
             </div>
         )
     }
 });
 
-var Page = React.createClass({
-    render:function(){
+var Dashboard = React.createClass({
+    // DATA LOADING HAPPENS HERE
+    getDefaultProps: function () {
+        return {
+            data: [
+                { day: '2016-02-01', count: 18 },
+                { day: '2016-02-02', count: 12 },
+                { day: '2016-02-03', count: 15 },
+                { day: '2016-02-04', count: 14 },
+                { day: '2016-02-05', count: 14 },
+                { day: '2016-02-06', count: 16 },
+                { day: '2016-02-07', count: 18 },
+                { day: '2016-02-08', count: 19 },
+                { day: '2016-02-09', count: 20 },
+                { day: '2016-02-10', count: 21 },
+                { day: '2016-02-11', count: 22 },
+                { day: '2016-02-12', count: 23 },
+                { day: '2016-02-13', count: 21 },
+                { day: '2016-02-14', count: 22 },
+                { day: '2016-02-15', count: 14 },
+                { day: '2016-02-16', count: 18 },
+                { day: '2016-02-17', count: 10 },
+                { day: '2016-02-18', count: 15 },
+                { day: '2016-02-19', count: 18 },
+                { day: '2016-02-20', count: 22 },
+                { day: '2016-02-21', count: 12 },
+                { day: '2016-02-22', count: 10 },
+                { day: '2016-02-23', count: 14 },
+                { day: '2016-02-24', count: 13 },
+                { day: '2016-02-25', count: 23 },
+                { day: '2016-02-26', count: 11 },
+                { day: '2016-02-27', count: 22 },
+                { day: '2016-02-28', count: 12 },
+                { day: '2016-02-29', count: 15 }
+            ]
+        };
+    },
+    getInitialState: function () {
+        return {
+            
+        };
+    },
+    mixins: [resizeMixin],
+ 
+    render: function () {
         return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-xs-12" >
-                        <div className="top fontSize">
-                            <a className="page-header" href="http://www.adeveloperdiary.com/d3-js/how-to-integrate-react-and-d3-the-right-way/"><h4 className="page-h4">(React + D3) Click here to view the full tutorial on adeveloperdiary.com</h4></a>
-                        </div>
-                    </div>
+            <div className="row">
+            <div className="col-xs-3">
+                <div className="top-left" id="filter">
+                    <Filter startDate={this.props.data[0].day} endDate={this.props.data[this.props.data.length-1].day}/>
                 </div>
-                <div class="col-xs-12">
-                    <div class="chart-container" id="chart-container">
-                        <div class="row">
-                            <div class="col-xs-2">
-                                <div class="top-left" id="filter">
-                                    <Filter/>
-                                </div>
-                            </div>
-                            <div class="col-xs-10">
-                                <div class="top-right" id="top-line-chart">
-                                    <Visitors/>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-5">
-                                <div class="bottom-left" id="browser">
-                                    <Browser/>
-                                </div>
-                            </div>
-                            <div class="col-xs-5">
-                                <div class="bottom-right" id="ret_visitors">
-                                    <RetVisitors/>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+            </div>
+            <div className="col-xs-9">
+                <div className="top-right" id="top-line-chart">
+                    <Visitors initialData={this.props.data}/>
                 </div>
+            </div>
+            <div className="col-xs-5">
+                <div className="bottom-left" id="browser">
+                    <Browser/>
+                </div>
+            </div>
+            <div className="col-xs-4">
+                <div className="bottom-right" id="ret_visitors">
+                    <RetVisitors/>
+                </div>
+            </div>
             </div>
         )
     }
 });
+// Single entry point for application
+ReactDOM.render(<Dashboard />, document.getElementById("dashboard"));
 
-ReactDOM.render(<Browser/>,document.getElementById("browser"));
-ReactDOM.render(<RetVisitors/>,document.getElementById("ret_visitors"));
-ReactDOM.render(<Visitors/>,document.getElementById("top-line-chart"));
-ReactDOM.render(<Filter />, document.getElementById("filter"));
 
 
 

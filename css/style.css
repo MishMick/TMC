@@ -34,11 +34,12 @@ h5{
     margin-top:20px;
     background-color: #3f5175;
     border-radius:4px;
-    height: 830px;
+    height: 810px;
     box-shadow: 1px 1px 1px 0px rgba(37,41,51,1);
 }
 
 .top-right{
+    margin-top:20px;
     margin-bottom: 10px;
     background-color: #3f5175;
     border-radius:4px;
