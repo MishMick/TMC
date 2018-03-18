@@ -147,8 +147,8 @@ var LineChart=React.createClass({
             w = this.state.width - (margin.left + margin.right),
             h = this.props.height - (margin.top + margin.bottom);
 
-        var parseDate = d3.time.format("%m-%d-%Y").parse;
-
+        var parseDate = d3.time.format("%Y-%m-%d").parse;
+       
         this.props.data.forEach(function (d) {
             d.date = parseDate(d.day);
         });
