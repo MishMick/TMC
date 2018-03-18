@@ -142,39 +142,6 @@ var LineChart=React.createClass({
         };
     },
     render:function(){
-        /*
-        var data=[
-            { day: '02-01-2016', count: 18 },
-            { day: '02-02-2016', count: 12 },
-            { day: '02-03-2016', count: 15 },
-            { day: '02-04-2016', count: 14 },
-            { day: '02-05-2016', count: 14 },
-            { day: '02-06-2016', count: 16 },
-            { day: '02-07-2016', count: 18 },
-            { day: '02-08-2016', count: 19 },
-            { day: '02-09-2016', count: 20 },
-            { day: '02-10-2016', count: 21 },
-            {day:'02-11-2016',count:22},
-            {day:'02-12-2016',count:23},
-            {day:'02-13-2016',count:21},
-            {day:'02-14-2016',count:22},
-            {day:'02-15-2016',count:14},
-            {day:'02-16-2016',count:18},
-            {day:'02-17-2016',count:10},
-            {day:'02-18-2016',count:15},
-            { day: '02-19-2016', count: 18 },
-            { day: '02-20-2016', count: 22 },
-            { day: '02-21-2016', count: 12 },
-            { day: '02-22-2016', count: 10 },
-            { day: '02-23-2016', count: 14 },
-            { day: '02-24-2016', count: 13 },
-            { day: '02-25-2016', count: 23 },
-            { day: '02-26-2016', count: 11 },
-            { day: '02-27-2016', count: 22 },
-            { day: '02-28-2016', count: 12 },
-            { day: '02-29-2016', count: 15 }
-        ];
-        */
         
         var margin = {top: 5, right: 50, bottom: 20, left: 50},
             w = this.state.width - (margin.left + margin.right),
