@@ -57,7 +57,6 @@ var AboveSLAPercent = React.createClass({
                 data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
             })
         }
-       //this.calcProgress(this.state.data);
     },
     render:function(){
         var progressPercent, defaultValue,dataLength;
