@@ -131,14 +131,12 @@ var DonutChart=React.createClass({
             .sort(null);
 
         this.color = d3.scale.ordinal()
-            .range(['#68c8d7','#eccd63','#bb8cdd','#de6942','#52b36e','#bbc7d9']);
+            .range(['#3498DB', '#F39C12','#E74C3C']);
 
         var data = [
             { name: 'IE', count: 40 },
             { name: 'Chrome', count: 32 },
             { name: 'Safari', count: 14 },
-            { name: 'Firefox', count: 9 },
-            { name: 'Others', count: 6 }
         ];
 
         this.setState({'data':data,width:this.props.width});
@@ -149,12 +147,7 @@ var DonutChart=React.createClass({
             { name: 'IE', count: Math.random() },
             { name: 'Chrome', count: Math.random() },
             { name: 'Safari', count: Math.random() },
-            { name: 'Firefox', count: Math.random() },
-            { name: 'Others', count: Math.random() },
-            { name: 'Opera', count: Math.random() }
-
         ];
-
         this.setState({'data':data });
     },
     render:function(){

@@ -34,7 +34,7 @@ h5{
     margin-top:20px;
     background-color: #3f5175;
     border-radius:4px;
-    height: 810px;
+    height: 830px;
     box-shadow: 1px 1px 1px 0px rgba(37,41,51,1);
 }
 
@@ -74,15 +74,19 @@ h5{
     font-size:14px;
     opacity:.8;
 }
+.top-right-svg{
+    text-align: center;
+    padding:10px;
+}
 
 .bottom-left-svg{
     padding-top:40px;
     text-align: center;
 }
 
-
 .bottom-right-svg{
     text-align: center;
+    padding:10px;
 }
 
 .line {
