@@ -1,6 +1,6 @@
 var eventEmitter = new EventEmitter();
 
-var Browser = React.createClass({
+var FileSource = React.createClass({
     componentWillMount: function () {
         eventEmitter.addListener("reload", this.reloadData);
     },
@@ -8,12 +8,11 @@ var Browser = React.createClass({
         eventEmitter.removeListener("reload", this.reloadData);
     },
     reloadData: function (defaultValue) {
-        console.info("Reload data called on Browser card");
     },
     render:function(){
         return (
             <div>
-                <h3>Browser Share</h3>
+                <h3>Files' source</h3>
                 <div className="pad bottom-left-svg">
                     <DonutChart id="bs_chart" padAngle={0.03}/>
                 </div>
@@ -22,31 +21,61 @@ var Browser = React.createClass({
     }
 });
 
-var RetVisitors = React.createClass({
+var AboveSLAPercent = React.createClass({
+    getInitialState: function () {
+        return {
+            data: this.props.initialData,
+            SLA: this.props.SLA,
+        };
+    },
     componentWillMount: function () {
-        eventEmitter.addListener("reload", this.reloadData);
+        eventEmitter.addListener("EVENT_START_DATE_CHANGE", this.reloadData);
+        eventEmitter.addListener("EVENT_END_DATE_CHANGE", this.reloadData);
     },
     componentWillUnmount: function () {
-        eventEmitter.removeListener("reload", this.reloadData);
+        eventEmitter.removeListener("EVENT_START_DATE_CHANGE", this.reloadData);
+        eventEmitter.removeListener("EVENT_END_DATE_CHANGE", this.reloadData);
     },
-    reloadData: function (defaultValue) {
-        console.info("Reload data called on RetVisitors card");
+    calcProgress : function (data) {
+        let percent = 0;
+        var defaultCount = 0;
+        for (var index = 0; index < this.state.data.length; index++) {
+            if (this.state.data[index].count > this.props.SLA[0].count) {
+                percent = ++defaultCount / this.state.data.length;
+            }
+        }
+        return Number.parseFloat(percent).toPrecision(2);
+    },
+    reloadData: function (range, value) {
+        if (range === 'start') {
+            this.setState({
+                data: this.state.data.filter(elem => new Date(value) <= new Date(elem.day))
+            })
+        }
+        else if (range === 'end') {
+            this.setState({
+                data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
+            })
+        }
+       this.calcProgress(this.state.data);
     },
     render:function(){
         return (
             <div>
-                <h3>Returning Visitors</h3>
+                <h3>Files above SLA</h3>
                 <div className="pad bottom-right-svg">
-                    <ProgressChart />
+                    <ProgressChart data={this.calcProgress(this.state.data)} SLA={this.state.SLA}/>
                     <br/>
+                    {/*
                     <BarChart />
+                    */}
                 </div>
             </div>
         )
     }
 });
 
-var Visitors = React.createClass({
+var FilesGraph = React.createClass({
     getInitialState: function () {
         return {
            data:this.props.initialData
@@ -76,8 +105,8 @@ var Visitors = React.createClass({
     render:function(){
         return (
             <div>
-                <h3>Visitors to your site</h3>
-                <div className="bottom-right-svg">
+                <h3>Files</h3>
+                <div className="top-right-svg">
                     <LineChart data={this.state.data}/>
                 </div>
             </div>
@@ -117,19 +146,31 @@ var Filter = React.createClass({
         return (
             <div className="filterDiv">
                 <form className="filterOptions">
+                <div className="col-cs-12">
+                    
                     <h4>File types</h4>
+                    <div className="col-xs-10">
                     <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="apple" /><h5>Apple</h5>
                     <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="orange" /><h5>Orange</h5>
                     <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="watermelon" /><h5>Watermelon</h5>
+                    </div>
                     <br/>
+                   
                     <h4>Location</h4>
+                    <div className="col-xs-12">
                     <input onChange={this.handleLocationChange} type="radio" name="location" value="London" /><h5>London</h5>
                     <input onChange={this.handleLocationChange} type="radio" name="location" value="Paris" /><h5>Paris</h5>
                     <input onChange={this.handleLocationChange} type="radio" name="location" value="New York" /><h5>New York</h5>
+                    </div>
                     <br/>
+                    <br/>
+                  
                     <h4>Date range</h4>
-                    <input onChange={this.handleStartDateChange} id="startDate" name="startDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.startDate}/> <h5>to</h5>
-                    <input onChange={this.handleEndDateChange} id="endDate" name="endDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.endDate} /> 
+                    <div className="col-xs-10">
+                    <input className="form-control" onChange={this.handleStartDateChange} id="startDate" name="startDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.startDate}/> <h5>to</h5>
+                    <input className="form-control" onChange={this.handleEndDateChange} id="endDate" name="endDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.endDate} /> 
+                    </div>
+                  </div>
                 </form>
             </div>
         )
@@ -170,6 +211,9 @@ var Dashboard = React.createClass({
                 { day: '2016-02-27', count: 22 },
                 { day: '2016-02-28', count: 12 },
                 { day: '2016-02-29', count: 15 }
+            ],
+            SLA: [
+                { count: 19}
             ]
         };
     },
@@ -190,17 +234,17 @@ var Dashboard = React.createClass({
             </div>
             <div className="col-xs-9">
                 <div className="top-right" id="top-line-chart">
-                    <Visitors initialData={this.props.data}/>
+                    <FilesGraph initialData={this.props.data}/>
                 </div>
             </div>
             <div className="col-xs-5">
-                <div className="bottom-left" id="browser">
-                    <Browser/>
+                <div className="bottom-left" id="fileSourceGraph">
+                    <FileSource/>
                 </div>
             </div>
             <div className="col-xs-4">
-                <div className="bottom-right" id="ret_visitors">
-                    <RetVisitors/>
+                <div className="bottom-right" id="aboveSLAPercentGraph">
+                    <AboveSLAPercent initialData={this.props.data} SLA={this.props.SLA}/>
                 </div>
             </div>
             </div>
