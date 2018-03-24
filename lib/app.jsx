@@ -61,7 +61,6 @@ var AboveSLAPercent = React.createClass({
     render:function(){
         var progressPercent, defaultValue,dataLength;
         [progressPercent, defaultValue,dataLength] = this.calcProgress(this.state.data);
-        console.info("DEFAULT VAL ", defaultValue,dataLength);
         return (
             <div>
                 <h3>SLA status</h3>

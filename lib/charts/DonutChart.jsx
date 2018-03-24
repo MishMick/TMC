@@ -134,9 +134,9 @@ var DonutChart=React.createClass({
             .range(['#3498DB', '#F39C12','#E74C3C']);
 
         var data = [
-            { name: 'IE', count: 40 },
-            { name: 'Chrome', count: 32 },
-            { name: 'Safari', count: 14 },
+            { name: 'London', count: 40 },
+            { name: 'Paris', count: 32 },
+            { name: 'New York', count: 14 },
         ];
 
         this.setState({'data':data,width:this.props.width});
@@ -144,9 +144,9 @@ var DonutChart=React.createClass({
 
     updateData:function(){
         var data = [
-            { name: 'IE', count: Math.random() },
-            { name: 'Chrome', count: Math.random() },
-            { name: 'Safari', count: Math.random() },
+            { name: 'London', count: Math.random() },
+            { name: 'Paris', count: Math.random() },
+            { name: 'New York', count: Math.random() },
         ];
         this.setState({'data':data });
     },
