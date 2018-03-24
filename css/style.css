@@ -34,8 +34,9 @@ h5{
     margin-top:20px;
     background-color: #3f5175;
     border-radius:4px;
-    height: 810px;
+    height: 830px;
     box-shadow: 1px 1px 1px 0px rgba(37,41,51,1);
+    margin-bottom:20px;
 }
 
 .top-right{
@@ -52,6 +53,7 @@ h5{
     border-radius: 4px;
     height: 400px;
     box-shadow: 1px 1px 1px 0px rgba(37,41,51,1);
+    margin-bottom: 20px;
 }
 
 .bottom-right{
@@ -59,6 +61,7 @@ h5{
     border-radius: 4px;
     height: 400px;
     box-shadow: 1px 1px 1px 0px rgba(37,41,51,1);
+    margin-bottom:20px;
 }
 
 .shadow {

@@ -44,7 +44,7 @@ var AboveSLAPercent = React.createClass({
                 percent = ++defaultCount / this.state.data.length;
             }
         }
-        return Number.parseFloat(percent).toPrecision(2);
+        return [Number.parseFloat(percent).toPrecision(2), defaultCount, (this.state.data.length - defaultCount)];
     },
     reloadData: function (range, value) {
         if (range === 'start') {
@@ -57,15 +57,24 @@ var AboveSLAPercent = React.createClass({
                 data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
             })
         }
-       this.calcProgress(this.state.data);
     },
     render:function(){
+        var progressPercent, defaultValue,dataLength;
+        [progressPercent, defaultValue,dataLength] = this.calcProgress(this.state.data);
+        console.info("DEFAULT VAL ", defaultValue,dataLength);
         return (
             <div>
-                <h3>Files above SLA</h3>
+                <h3>SLA status</h3>
                 <div className="pad bottom-right-svg">
-                    <ProgressChart data={this.calcProgress(this.state.data)} SLA={this.state.SLA}/>
-                    <br/>
+                    <ProgressChart data={progressPercent} SLA={this.state.SLA}/>
+                    <div className="row">
+                        <div className="col-xs-12">
+                        <h4>Files above SLA : {defaultValue}</h4>
+                        </div>
+                        <div className="col-xs-12">
+                        <h4>Files below SLA : {dataLength}</h4>
+                        </div>
+                    </div>
                     {/*
                     <BarChart />
                     */}
@@ -78,7 +87,8 @@ var AboveSLAPercent = React.createClass({
 var FilesGraph = React.createClass({
     getInitialState: function () {
         return {
-           data:this.props.initialData
+           data:this.props.initialData,
+            SLA: this.props.SLA
         };
     },
     componentWillMount: function () {
@@ -107,7 +117,7 @@ var FilesGraph = React.createClass({
             <div>
                 <h3>Files</h3>
                 <div className="top-right-svg">
-                    <LineChart data={this.state.data}/>
+                    <LineChart data={this.state.data} SLA={this.state.SLA}/>
                 </div>
             </div>
         )
@@ -234,7 +244,7 @@ var Dashboard = React.createClass({
             </div>
             <div className="col-xs-9">
                 <div className="top-right" id="top-line-chart">
-                    <FilesGraph initialData={this.props.data}/>
+                    <FilesGraph initialData={this.props.data} SLA={this.props.SLA}/>
                 </div>
             </div>
             <div className="col-xs-5">
