@@ -170,7 +170,7 @@ var Filter = React.createClass({
                     <input className="form-control" onChange={this.handleStartDateChange} id="startDate" name="startDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.startDate}/> <h5>to</h5>
                     <input className="form-control" onChange={this.handleEndDateChange} id="endDate" name="endDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.endDate} /> 
                     </div>
-                    </div>
+                  </div>
                 </form>
             </div>
         )
