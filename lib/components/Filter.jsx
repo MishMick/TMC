@@ -30,6 +30,7 @@ var Filter = React.createClass({
         return (
             <div className="filterDiv">
                 <form className="filterOptions">
+
                     <div className="col-xs-12">
                         <h4>File types</h4>
                             <div className="checkBoxGroup">
@@ -72,7 +73,7 @@ var Filter = React.createClass({
                        
                             <input className="form-control" onChange={this.handleStartDateChange} id="startDate" name="startDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.startDate} /> <h5>to</h5>
                             <input className="form-control" onChange={this.handleEndDateChange} id="endDate" name="endDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.endDate} />
-                    
+  
                     </div>
                 </form>
             </div>
