@@ -30,6 +30,15 @@ var Filter = React.createClass({
         eventEmitter.emitEvent("EVENT_DATE_CHANGE", [this.state.startDate, this.state.endDate]);
     },
     render: function () {
+        var labelDivStyle = {
+            display: 'inline-block',
+            paddingLeft: '10px',
+            color: '#f8fdff',
+            opacity: '.8',
+            fontWeight: '400',
+            fontSize: '15px',
+            paddingTop: '5px'
+        };
         return (
             <div className="filterDiv">
                 <form className="filterOptions">
@@ -38,27 +47,27 @@ var Filter = React.createClass({
                         <div className="checkBoxGroup">
                             <div className="row">
                                 <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="pnl_attrib" />
-                                PNL ATTRIB
+                                <div style={labelDivStyle}>PNL ATTRIB</div>
                             </div>
                             <div className="row">
                                 <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="mtm_cash" />
-                                MTM CASH
+                                <div style={labelDivStyle}>MTM CASH</div>
                             </div>
                             <div className="row">
                                 <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="risq" />
-                                RISQ
+                                <div style={labelDivStyle}>RISQ</div>
                             </div>
                             <div className="row">
                                 <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="new_trade" />
-                                NEW TRADE
+                                <div style={labelDivStyle}>NEW TRADE</div>
                             </div>
                             <div className="row">
                                 <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="flex_swap" />
-                                FLEX SWAP
+                                <div style={labelDivStyle}>FLEX SWAP</div>
                             </div>
                             <div className="row">
                                 <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="amend" />
-                                AMEND
+                                <div style={labelDivStyle}>AMEND</div>
                             </div>
                         </div>
                         <hr />
@@ -67,15 +76,15 @@ var Filter = React.createClass({
                         <div className="radioGroup">
                             <div className="row">
                                 <input onChange={this.handleLocationChange} type="radio" name="location" value="London" />
-                                London
+                                <div style={labelDivStyle}>London</div>
                             </div>
                             <div className="row">
                                 <input onChange={this.handleLocationChange} type="radio" name="location" value="Paris" />
-                                Paris
+                                <div style={labelDivStyle}>Paris</div>
                             </div>
                             <div className="row">
                                 <input onChange={this.handleLocationChange} type="radio" name="location" value="New York" />
-                                New York
+                                <div style={labelDivStyle}>New York</div>
                             </div>
                         </div>
                         <hr />
@@ -88,7 +97,7 @@ var Filter = React.createClass({
 
                     </div>
                 </form>
-                <button onClick={this.filter}>SUBMIT</button>
+                <button id="filterBtn" type="button" className="btn btn-primary" onClick={this.filter}>FILTER</button>
 
             </div>
         )
