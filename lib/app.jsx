@@ -20,13 +20,14 @@ var Filter = React.createClass({
         this.setState({
             startDate: e.target.value
         })
-        eventEmitter.emitEvent("EVENT_START_DATE_CHANGE", ['start', e.target.value]);
     },
     handleEndDateChange: function (e) {
         this.setState({
             endDate: e.target.value
         })
-        eventEmitter.emitEvent("EVENT_END_DATE_CHANGE", ['end', e.target.value]);
+    },
+    filter: function(){
+        eventEmitter.emitEvent("EVENT_DATE_CHANGE", [this.state.startDate, this.state.endDate]);
     },
     render: function () {
         return (
@@ -83,9 +84,12 @@ var Filter = React.createClass({
 
                         <input className="form-control" onChange={this.handleStartDateChange} id="startDate" name="startDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.startDate} /> <h5>to</h5>
                         <input className="form-control" onChange={this.handleEndDateChange} id="endDate" name="endDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.endDate} />
+                        <hr />
 
                     </div>
                 </form>
+                <button onClick={this.filter}>SUBMIT</button>
+
             </div>
         )
     }
@@ -120,12 +124,10 @@ var AboveSLAPercent = React.createClass({
         };
     },
     componentWillMount: function () {
-        eventEmitter.addListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.addListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.addListener("EVENT_DATE_CHANGE", this.reloadData);
     },
     componentWillUnmount: function () {
-        eventEmitter.removeListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.removeListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.removeListener("EVENT_DATE_CHANGE", this.reloadData);
     },
     calcProgress : function (data) {
         let percent = 0;
@@ -137,17 +139,12 @@ var AboveSLAPercent = React.createClass({
         }
         return [Number.parseFloat(percent).toPrecision(2), defaultCount, (this.state.data.length - defaultCount)];
     },
-    reloadData: function (range, value) {
-        if (range === 'start') {
-            this.setState({
-                data: this.state.data.filter(elem => new Date(value) <= new Date(elem.day))
-            })
-        }
-        else if (range === 'end') {
-            this.setState({
-                data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
-            })
-        }
+    reloadData: function (startDate,endDate) {
+        var Data = this.props.initialData;
+        Data = Data.filter(elem => new Date(startDate) <= new Date(elem.day) && new Date(elem.day) <= new Date(endDate))
+        this.setState({
+            data: Data
+        });
     },
     render:function(){
         var progressPercent, defaultValue,dataLength;
@@ -182,25 +179,17 @@ var FilesGraph = React.createClass({
         };
     },
     componentWillMount: function () {
-        eventEmitter.addListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.addListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.addListener("EVENT_DATE_CHANGE", this.reloadData);
     },
     componentWillUnmount: function () {
-        eventEmitter.removeListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.removeListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.removeListener("EVENT_DATE_CHANGE", this.reloadData);
     },
-    reloadData: function (range,value) {
-    
-        if(range === 'start'){
-            this.setState({
-                data: this.state.data.filter(elem => new Date(value) <= new Date(elem.day))
-            })
-        }
-        else if(range === 'end'){
-            this.setState({
-                data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
-            })
-        }
+    reloadData: function (startDate, endDate) {
+        var Data = this.props.initialData;
+        Data = Data.filter(elem => new Date(startDate) <= new Date(elem.day) && new Date(elem.day) <= new Date(endDate))
+        this.setState({
+            data: Data
+        });
     },
     render:function(){
         return (
