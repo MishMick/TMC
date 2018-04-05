@@ -48,7 +48,7 @@ var Filter = React.createClass({
                         <h4>File types</h4>
                         <div className="checkBoxGroup">
                             <div className="row">
-                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="pnl_a
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="pnl_attrib"/>
                                 <div style={labelDivStyle}>PNL ATTRIB</div>
                             </div>
                             <div className="row">
