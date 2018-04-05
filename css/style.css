@@ -26,12 +26,14 @@ h5{
     font-size: 15px;
 }
 
+
 #filterBtn{
     width:80%;
     margin-top:20px;
     margin-left:10%;
     margin-right:10%;
 }
+
 .file-type-filter{
     padding-left: 20px;
     padding-top:20px;

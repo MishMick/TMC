@@ -30,6 +30,7 @@ var Filter = React.createClass({
         eventEmitter.emitEvent("EVENT_DATE_CHANGE", [this.state.startDate, this.state.endDate]);
     },
     render: function () {
+
         var labelDivStyle = {
             display: 'inline-block',
             paddingLeft: '10px',
@@ -39,6 +40,7 @@ var Filter = React.createClass({
             fontSize: '15px',
             paddingTop: '5px'
         };
+
         return (
             <div className="filterDiv">
                 <form className="filterOptions">
@@ -46,7 +48,7 @@ var Filter = React.createClass({
                         <h4>File types</h4>
                         <div className="checkBoxGroup">
                             <div className="row">
-                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="pnl_attrib" />
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="pnl_a
                                 <div style={labelDivStyle}>PNL ATTRIB</div>
                             </div>
                             <div className="row">
@@ -98,7 +100,6 @@ var Filter = React.createClass({
                     </div>
                 </form>
                 <button id="filterBtn" type="button" className="btn btn-primary" onClick={this.filter}>FILTER</button>
-
             </div>
         )
     }
