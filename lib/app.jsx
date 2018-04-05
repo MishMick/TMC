@@ -1,5 +1,100 @@
 var eventEmitter = new EventEmitter();
 
+var Filter = React.createClass({
+
+    getDefaultProps: function () {
+        return {
+
+        };
+    },
+    getInitialState: function () {
+        return {
+            location: '',
+            file_type: [],
+            startDate: this.props.startDate,
+            endDate: this.props.endDate,
+        };
+    },
+    mixins: [resizeMixin],
+    handleStartDateChange: function (e) {
+        this.setState({
+            startDate: e.target.value
+        })
+    },
+    handleEndDateChange: function (e) {
+        this.setState({
+            endDate: e.target.value
+        })
+    },
+    filter: function(){
+        eventEmitter.emitEvent("EVENT_DATE_CHANGE", [this.state.startDate, this.state.endDate]);
+    },
+    render: function () {
+        return (
+            <div className="filterDiv">
+                <form className="filterOptions">
+                    <div className="col-xs-12">
+                        <h4>File types</h4>
+                        <div className="checkBoxGroup">
+                            <div className="row">
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="pnl_attrib" />
+                                PNL ATTRIB
+                            </div>
+                            <div className="row">
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="mtm_cash" />
+                                MTM CASH
+                            </div>
+                            <div className="row">
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="risq" />
+                                RISQ
+                            </div>
+                            <div className="row">
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="new_trade" />
+                                NEW TRADE
+                            </div>
+                            <div className="row">
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="flex_swap" />
+                                FLEX SWAP
+                            </div>
+                            <div className="row">
+                                <input onChange={this.handleFileTypeChange} type="checkbox" name="file_type" value="amend" />
+                                AMEND
+                            </div>
+                        </div>
+                        <hr />
+
+                        <h4>Location</h4>
+                        <div className="radioGroup">
+                            <div className="row">
+                                <input onChange={this.handleLocationChange} type="radio" name="location" value="London" />
+                                London
+                            </div>
+                            <div className="row">
+                                <input onChange={this.handleLocationChange} type="radio" name="location" value="Paris" />
+                                Paris
+                            </div>
+                            <div className="row">
+                                <input onChange={this.handleLocationChange} type="radio" name="location" value="New York" />
+                                New York
+                            </div>
+                        </div>
+                        <hr />
+
+                        <h4>Date range</h4>
+
+                        <input className="form-control" onChange={this.handleStartDateChange} id="startDate" name="startDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.startDate} /> <h5>to</h5>
+                        <input className="form-control" onChange={this.handleEndDateChange} id="endDate" name="endDate" type="date" min={this.props.startDate} max={this.props.endDate} value={this.state.endDate} />
+                        <hr />
+
+                    </div>
+                </form>
+                <button onClick={this.filter}>SUBMIT</button>
+
+            </div>
+        )
+    }
+});
+
 var FileSource = React.createClass({
     componentWillMount: function () {
         eventEmitter.addListener("reload", this.reloadData);
@@ -29,12 +124,10 @@ var AboveSLAPercent = React.createClass({
         };
     },
     componentWillMount: function () {
-        eventEmitter.addListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.addListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.addListener("EVENT_DATE_CHANGE", this.reloadData);
     },
     componentWillUnmount: function () {
-        eventEmitter.removeListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.removeListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.removeListener("EVENT_DATE_CHANGE", this.reloadData);
     },
     calcProgress : function (data) {
         let percent = 0;
@@ -46,17 +139,12 @@ var AboveSLAPercent = React.createClass({
         }
         return [Number.parseFloat(percent).toPrecision(2), defaultCount, (this.state.data.length - defaultCount)];
     },
-    reloadData: function (range, value) {
-        if (range === 'start') {
-            this.setState({
-                data: this.state.data.filter(elem => new Date(value) <= new Date(elem.day))
-            })
-        }
-        else if (range === 'end') {
-            this.setState({
-                data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
-            })
-        }
+    reloadData: function (startDate,endDate) {
+        var Data = this.props.initialData;
+        Data = Data.filter(elem => new Date(startDate) <= new Date(elem.day) && new Date(elem.day) <= new Date(endDate))
+        this.setState({
+            data: Data
+        });
     },
     render:function(){
         var progressPercent, defaultValue,dataLength;
@@ -91,25 +179,17 @@ var FilesGraph = React.createClass({
         };
     },
     componentWillMount: function () {
-        eventEmitter.addListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.addListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.addListener("EVENT_DATE_CHANGE", this.reloadData);
     },
     componentWillUnmount: function () {
-        eventEmitter.removeListener("EVENT_START_DATE_CHANGE", this.reloadData);
-        eventEmitter.removeListener("EVENT_END_DATE_CHANGE", this.reloadData);
+        eventEmitter.removeListener("EVENT_DATE_CHANGE", this.reloadData);
     },
-    reloadData: function (range,value) {
-    
-        if(range === 'start'){
-            this.setState({
-                data: this.state.data.filter(elem => new Date(value) <= new Date(elem.day))
-            })
-        }
-        else if(range === 'end'){
-            this.setState({
-                data: this.state.data.filter(elem => new Date(elem.day) <= new Date(value))
-            })
-        }
+    reloadData: function (startDate, endDate) {
+        var Data = this.props.initialData;
+        Data = Data.filter(elem => new Date(startDate) <= new Date(elem.day) && new Date(elem.day) <= new Date(endDate))
+        this.setState({
+            data: Data
+        });
     },
     render:function(){
         return (
